@@ -1,5 +1,5 @@
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
-from llama_index.core.node_parser import SimpleNodeParser
+from llama_index.core.node_parser import SentenceSplitter
 from llama_index.llms.openai import OpenAI
 import os
 import tempfile
@@ -7,9 +7,9 @@ import tempfile
 def ragbot(uploaded_file):
     if uploaded_file:
         
-        query = "What are the knowledge and skills provided in the given document?"
+        query = "Give me detailed information about the knowledge, skills and programming languages provided in the given document."
         
-        with uploaded_file.TemporaryDirectory() as tempdir:
+        with tempfile.TemporaryDirectory() as tempdir:
             uploaded_file_path = os.path.join(tempdir, "uploaded_file.pdf")
             with open(uploaded_file_path, "wb") as f:
                 f.write(uploaded_file.read())
@@ -19,15 +19,13 @@ def ragbot(uploaded_file):
             
             documents = reader.load_data()
 
-            index = VectorStoreIndex.from_documents(documents)
+            node_parser = SentenceSplitter()
+    
+            nodes = node_parser.get_nodes_from_documents(documents, show_progress=True)
+
+            index = VectorStoreIndex(nodes)
             
-            llm = OpenAI(model="gpt-4o-mini", temperature=0.00, system_prompt=
-              """
-                As an AI, your task is to act as a curriculum expert. 
-                Analyze the provided document, which contains curriculum information from a formal teaching institution. 
-                Identify and recognize the knowledge and skills a student is expected to learn from this curriculum.
-              """
-              )
+            llm = OpenAI(model="gpt-4o-mini", temperature=0.00,)
             
             return index.as_query_engine(llm=llm).query(query).response
 

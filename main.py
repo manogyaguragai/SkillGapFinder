@@ -1,5 +1,9 @@
 import streamlit as st
 from searchbot import web_searcher
+from ragbot import ragbot
+
+upload = st.file_uploader("Upload your syllabus", type="pdf")
+st.write(ragbot(uploaded_file=upload))
 columns = st.columns(3)
 
 selected_industry = columns[0].selectbox(
@@ -22,4 +26,4 @@ data_to_send = {
     "level": selected_level
 }
 
-web_searcher(data_to_send)
+st.write(web_searcher(data_to_send))

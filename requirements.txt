@@ -1,0 +1,4 @@
+llama-index
+llama-index-llms-openai
+streamlit
+llama-index-tools-duckduckgo

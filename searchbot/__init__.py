@@ -1,7 +1,6 @@
 from llama_index.llms.openai import OpenAI
 from llama_index.tools.duckduckgo import DuckDuckGoSearchToolSpec
 from llama_index.readers.web import SimpleWebPageReader
-from llama_index.core import PromptTemplate
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core import VectorStoreIndex
 
@@ -12,16 +11,16 @@ def web_searcher(data_to_send):
   industry = data_to_send.get('industry')
 
   if level == 'intern':
-      user_question = f'{job or industry} Internships in Nepal'
+    user_question = f'{job or industry} Internships in Nepal'
   else:
-      user_question = f'{data_to_send["level"]} {job or industry} Jobs in Nepal'  
+    user_question = f'{data_to_send["level"]} {job or industry} Jobs in Nepal'  
   
   print(f'USER QUESTION: \n\n {user_question}')
   
   tool_spec = DuckDuckGoSearchToolSpec()
 
   if user_question != "None":
-    search_results = tool_spec.duckduckgo_full_search(query=user_question, max_results=5) 
+    search_results = tool_spec.duckduckgo_full_search(query=user_question, max_results=5,region="np-np") 
   else:
     search_results = "None"
 
@@ -38,21 +37,19 @@ def web_searcher(data_to_send):
 
   try:
       # Fetch data from URLs using TrafilaturaWebReader
-      documents = SimpleWebPageReader().load_data(urls)
+    documents = SimpleWebPageReader().load_data(urls)
       
       # Ensure that each document has valid content
-      valid_documents = [doc for doc in documents if doc.text is not None]
+    valid_documents = [doc for doc in documents if doc.text is not None]
       
-      if valid_documents:
-          print("WEB CONTENT FETCHED:")
-          # for doc in valid_documents:
-          #     with st.container(border=True):
-          #       st.write(doc)
-      else:
-          print("No valid content was fetched from the provided URLs.")
+    if valid_documents:
+      print("WEB CONTENT FETCHED:")
+         
+    else:
+      print("No valid content was fetched from the provided URLs.")
 
   except Exception as e:
-      print(f"Error fetching data: {e}")
+    print(f"Error fetching data: {e}")
 
   node_parser = SentenceSplitter(chunk_size=1024, chunk_overlap=100)
     

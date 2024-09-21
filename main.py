@@ -1,7 +1,6 @@
 import streamlit as st
-st.set_page_config(page_title="SkillGapFinder", layout="wide",page_icon=os.path.join("assets","logo_transparent.png"))
-
 import os
+st.set_page_config(page_title="SkillGapFinder", layout="wide",page_icon=os.path.join("assets","logo_transparent.png"))
 import tempfile
 from utils import get_gap
 from recommenderbot import project_recommender

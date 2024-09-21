@@ -12,6 +12,8 @@ Present the gaps in a concise, structured format.
 Guidelines:
 Do not provide any recommendations, advice, or guidance. Focus solely on identifying the gaps.
 Ensure the output is clear, structured, and directly addresses the differences between the curriculum and industry requirements.
+Provide how close the user is to reaching the industry standards in percentage.
+
 
 Inputs:
 {curriculum}: A list or summary of courses, skills, and competencies covered in the college's educational curriculum.
@@ -20,6 +22,7 @@ Inputs:
 {industry_standards}: A list of required skills, certifications, and competencies expected by the industry.
 
 {skills}: A list of skills, certifications, and competencies provided by the student.
-- Format: Details of current industry standards, qualifications, certifications, and required skills.
+
+- Format: Details of current industry standards, qualifications, certifications, , required skills and how close the student is to reaching the industry standards.
 
 """

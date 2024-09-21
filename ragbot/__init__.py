@@ -2,7 +2,7 @@ from llama_index.core import VectorStoreIndex
 from llama_index.readers.file import PyMuPDFReader
 from llama_index.llms.openai import OpenAI
 loader = PyMuPDFReader()
-LLM = OpenAI(model="gpt-4", temperature=0.0)
+LLM = OpenAI(model="gpt-4o-mini", temperature=0.0)
 
 def ragbot(path):
   try:

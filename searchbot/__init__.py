@@ -1,6 +1,5 @@
 import openai
 from spider import Spider
-import requests, os
 
 spider_client = Spider()
 openai_client = openai.Client()
@@ -31,7 +30,7 @@ def search(query, limit=5):
 def openai_request(system_content, user_content):
     """Helper function to make OpenAI API requests."""
     response = openai_client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": system_content},
             {"role": "user", "content": user_content}
@@ -66,7 +65,7 @@ def refine_question(original_question):
         f"Original question: {original_question}\n\n Please provide a refined search query to find more relevant information from the web."
     )
 
-def research(user_query, max_iterations=5):
+def research(user_query,):
     """Perform research on the given question."""
     print(f"Starting research for: {user_query}")
     

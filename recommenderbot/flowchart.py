@@ -50,13 +50,13 @@ def get_flowchart(urls, data):
   
   # screenshot_buffer = BytesIO()
   
-  img = imgkit.from_url(best_url, False)    
+  # img = imgkit.from_url(best_url, False)    
     
   # screenshot_data = screenshot_buffer.getvalue()
   
   # screenshot_buffer.close()
 
-  return img, best_url
+  return  best_url
   
 
   

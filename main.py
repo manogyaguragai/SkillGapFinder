@@ -37,7 +37,7 @@ with st.container():
         with st.spinner("**Processing**"):
             if not syllabus_upload:
                 st.info("Please upload your syllabus")
-
+                st.stop()
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(syllabus_upload.read())
                 syllabus_path = temp_file.name
@@ -62,7 +62,7 @@ with st.container():
             syllabus_response = data_from_file_syllabus.response
             response = get_gap(data_from_file=syllabus_response, web_results=search_results,cv_data=cv_resp)
             
-            roadmap_img, roadmap_url = get_flowchart(urls, data)
+            roadmap_url = get_flowchart(urls, data)
             
 
 

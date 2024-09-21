@@ -88,6 +88,8 @@ with st.container(border=1):
 
 # By combining technical expertise with strong analytical and communication skills, mid-level data analysts in Nepal play a crucial role in helping organizations leverage data for strategic advantages. The evolving tech scene in Nepal offers ample opportunities for growth and professional development in this field.
 # """
-response = get_gap(data_from_file)
-
-st.write(response)
+try:
+    response = get_gap(data_from_file=data_from_file,web_results=None)
+    st.write(response)
+except NameError:
+    st.info("Please upload your syllabus")

@@ -72,8 +72,11 @@ def info_card_module():
         # st.write(" ")
         if st.session_state.get("job_selected", False):
             user_interests = dialog()
-            st.write(user_interests)
-    
+
+    if user_interests:
+        for i in user_interests: 
+
+            st.write(i.replace("$","USD"))    
     try:
         return syllabus_upload,uploaded_file
     except:

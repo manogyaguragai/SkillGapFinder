@@ -77,7 +77,7 @@ with st.container(border=1):
                     resource, urls = project_recommender(data)
                     
                     # Identify skill gaps based on the syllabus (and CV if available)
-                    response = get_gap(data_from_file=data_from_file, web_results=search_results, cv_file=cv_path)
+                    response, percentage = get_gap(data_from_file=data_from_file, web_results=search_results, cv_data=cv_path)
                     
                     # Generate roadmap and project ideas
                     roadmap_url = get_flowchart(urls, data)
@@ -93,7 +93,11 @@ with st.container(border=1):
                     # Display identified skill gap
                     with st.expander("**Identified Gap Between Your Curriculum and the Industry**", expanded=False):
                         st.write(response)
-                    
+                        if percentage:
+                            st.write(percentage)
+                            my_bar = st.progress(percentage/100, text="You Readiness Level")
+                            my_bar.progress(percentage/100, text="You Readiness Level")
+
                     # Display roadmap and project ideas
                     with st.expander("**Roadmap and Project Ideas**"):
                         st.write(resource)

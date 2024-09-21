@@ -1,13 +1,24 @@
-
+import re
 from llama_index.llms.openai import OpenAI
 from prompt import PROMPT
 from interestbot import search_for_jobs
 import streamlit as st
 llm = OpenAI(model="gpt-4o-mini",temperature=0.0)
 
-def get_gap( web_results,data_from_file,cv_file):
+def get_gap(web_results,data_from_file,cv_data):
     
-    return llm.complete(PROMPT.format(curriculum=data_from_file, industry_standards=web_results,cv_file=cv_file)).text
+    response = llm.complete(PROMPT.format(curriculum=data_from_file, industry_standards=web_results, cv_file=cv_data)).text
+
+    pattern = r"\d+(?=%)"  
+    
+    matches = re.search(pattern, response)
+
+    if matches:
+        percentage = int(matches.group()) 
+    else:
+        percentage = None
+
+    return response, percentage
 
 def dialog():
     with st.form("Interests"):

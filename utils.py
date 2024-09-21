@@ -32,7 +32,7 @@ def filters():
 
     selected_job = columns[1].selectbox(
         label="Choose your preferred job",
-        options=[None] + jobs_by_industry,
+        options=[None] + jobs_by_industry.get(selected_industry, []),
         index=0
     )
 

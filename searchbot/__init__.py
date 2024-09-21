@@ -1,75 +1,97 @@
-from llama_index.llms.openai import OpenAI
-from llama_index.tools.duckduckgo import DuckDuckGoSearchToolSpec
-from llama_index.readers.web import SimpleWebPageReader
-from llama_index.core.node_parser import SentenceSplitter
-from llama_index.core import VectorStoreIndex
+import openai
+from spider import Spider
+import requests, os
 
-def web_searcher(data_to_send):
-  
-  level = data_to_send['level'].lower()
-  job = data_to_send.get('job')
-  industry = data_to_send.get('industry')
+headers = {
+    'Authorization': os.getenv("SPIDER_API_KEY"),
+    'Content-Type': 'application/json',
+}
 
-  if level == 'intern':
-    user_question = f'{job or industry} Internships in Nepal'
-  else:
-    user_question = f'{data_to_send["level"]} {job or industry} Jobs in Nepal'  
-  
-  print(f'USER QUESTION: \n\n {user_question}')
-  
-  tool_spec = DuckDuckGoSearchToolSpec()
+json_data = {"search": "python developer jobs in nepal", "search_limit": 5, "limit": 25, "return_format": "raw"}
 
-  if user_question != "None":
-    search_results = tool_spec.duckduckgo_full_search(query=user_question, max_results=5,region="np-np") 
-  else:
-    search_results = "None"
+response = requests.post('https://api.spider.cloud/search', headers=headers, json=json_data)
 
-  print("Search Results Fetched")
-  print(search_results)
+# Check if the request was successful
+if response.status_code == 200:
+    try:
+        print(response.json())  # Attempt to parse JSON
+    except ValueError:  # Handle JSONDecodeError more gracefully
+        print("Invalid JSON response")
+        print(response.text)  # Print the raw response for debugging
+else:
+    print(f"Request failed with status code: {response.status_code}")
+    print(response.text)  # Print response for debugging purposes
 
-  try:
-    urls = [item['href'] for item in search_results]
-  except:
-    urls = []
-
-  print("URL LIST EXTRACTED")
-  print(urls)
-
-  try:
-      # Fetch data from URLs using TrafilaturaWebReader
-    documents = SimpleWebPageReader().load_data(urls)
-      
-      # Ensure that each document has valid content
-    valid_documents = [doc for doc in documents if doc.text is not None]
-      
-    if valid_documents:
-      print("WEB CONTENT FETCHED:")
-         
-    else:
-      print("No valid content was fetched from the provided URLs.")
-
-  except Exception as e:
-    print(f"Error fetching data: {e}")
-
-  node_parser = SentenceSplitter(chunk_size=1024, chunk_overlap=100)
     
-  nodes = node_parser.get_nodes_from_documents(valid_documents, show_progress=True)
 
-  index = VectorStoreIndex(nodes)
-      
-  llm = OpenAI(model="gpt-4", temperature=0.00, system_prompt=
-              """
-              You are a career counsellor responsible for providing career guidance to students and showing the gap between academics and the selected industry.
-              You must use only the information from the provided document as your knowledge base.
-              You need to understand the document and give a detailed list of Job Description, Hiring Comapny, Salary and Job Requirements.
-              Understand the job requirements from all documents and categorize them into "Technical Requirements" and "Non-Technical Requirements".
-              Include as many requirements as possible and if there are more than 10 requirements, mention the core requirements first and label others as "Additional Requirements".
-              You also need to properly format the reply making use of proper headings and units.
-              Do not include any application deadlines and any other dates.
-              Your goal is to assist the user by providing accurate, polite, and helpful responses based solely on the available product information.
-              """
-              )
+# def search(query, limit=5):
+#     """Perform a web search using Spider."""
+#     params = {"limit": limit, "fetch_page_content": False}
+#     print(f"Searching for: {query}")
+#     results = spider_client.search(query, params)
+#     print(f"Found {len(results)} results.")
+#     print(results)
+#     return results
 
-  question = "Give me a detailed list of Job Description, Hiring Comapny, Salary and Job Requirements from all given documents."
+# def openai_request(system_content, user_content):
+#     """Helper function to make OpenAI API requests."""
+#     response = openai_client.chat.completions.create(
+#         model="gpt-4",
+#         messages=[
+#             {"role": "system", "content": system_content},
+#             {"role": "user", "content": user_content}
+#         ]
+#     )
+#     return response.choices[0].message.content
 
-  return(index.as_query_engine(llm=llm).query(question).response)
+# def form_search_query(user_query):
+#     """Form a search query from the user's input."""
+#     search_query = openai_request(
+#         "You are an AI research assistant. Your task is to form an effective search query based on the user's question.",
+#         f"User's question: {user_query}\n\nPlease provide a concise and effective search query to find relevant information from the web."
+#     )
+#     return search_query
+
+# def form_final_answer(user_query, summary):
+#     """Form a final answer based on the user's query and the summary."""
+#     final_answer = openai_request(
+#         """
+#         You are an AI research assistant. Your task is to form a comprehensive answer to the user's question based on the provided summary.
+#         """,
+#         f"User's question: {user_query}\n\nSummary of research:\n{summary}\n\nPlease provide a comprehensive answer to the user's question based on this information."
+#     )
+#     print("Formed final answer.")
+#     return final_answer
+
+# def refine_question(original_question):
+#     """Refine the search question based on the evaluation."""
+#     print("Refining...")
+#     return openai_request(
+#         "You are an AI research assistant. Your task is to refine a search query based on the original question",
+#         f"Original question: {original_question}\n\nPlease provide a refined search query to find more relevant information from the web."
+#     )
+
+# def research(user_query, max_iterations=5):
+#     """Perform research on the given question."""
+#     print(f"Starting research for: {user_query}")
+    
+#     search_query = form_search_query(user_query)
+#     print(f"Search query: {search_query}")
+    
+#     search_results = search(search_query)
+    
+#     print(f"Search results: {search_results}")
+    
+#     combined_summary = "\n".join([result['description'] for result in search_results['content']])
+    
+#     final_answer = form_final_answer(user_query, combined_summary)
+#     return f"Final Answer:\n{final_answer}\n\nBased on:\n{combined_summary}"
+
+
+
+# user_input = "frontend developer job descriptions nepal"
+
+# user_query = refine_question(user_input)
+# result = research(user_query)
+# print(result)
+

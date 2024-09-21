@@ -35,12 +35,24 @@ def recommender(data_to_send):
   try:
       # Fetch data from URLs using TrafilaturaWebReader
     documents = SimpleWebPageReader().load_data(urls)
+    print("DOCUMENTS FETCHED")
+    # print(documents)
       
       # Ensure that each document has valid content
     valid_documents = [doc for doc in documents if doc.text is not None]
+    print("VALID DOCUMENTS FETCHED")
+    # print(valid_documents)
       
     if valid_documents:
       print("WEB CONTENT FETCHED:")
+      
+      all_text = " ".join([doc.text for doc in valid_documents])
+      soup = BeautifulSoup(all_text, 'html.parser')
+      
+      urls = []
+      for link in soup.find_all('a', href=True):
+        urls.append(link['href'])
+        
          
     else:
       print("No valid content was fetched from the provided URLs.")
@@ -48,11 +60,6 @@ def recommender(data_to_send):
   except Exception as e:
     print(f"Error fetching data: {e}")
     
-  soup = BeautifulSoup(valid_documents, 'html.parser')
-  urls = []
-
-  for link in soup.find_all('a', href=True):
-      urls.append(link['href'])
       
   print(f'FETCHED URLS: \n\n {urls}')
 
@@ -62,15 +69,14 @@ def recommender(data_to_send):
 
   index = VectorStoreIndex(nodes)
       
-  llm = OpenAI(model="gpt-4", temperature=0.00, system_prompt=
+  llm = OpenAI(model="gpt-4o-mini", temperature=0.00, system_prompt=
               """
-              You are an expert career specialist who can make marvellous roadmap charts according to given job information.
-              From the given document, extract information that will help you make a roadmap chart for the given job.
-              You will be provided with a list of {urls} that contain links to certain resources that the user might need.
-              Understand the URLs and recommend the most relevant information from them.
+              You are an expert career specialist who can make marvellous roadmaps according to given job information.
+              Identify the job and industry provided in the given document.
+              Extract information that will help you make a roadmap for the identified job and industry.
               """
               )
 
-  question = "Give me prper roadmap flow chart and links to resources to learn the topics in the given documents."
+  question = "Make me a proper roadmap learn the topics and get the skills necessary for the job in the given documents ."
 
-  return(index.as_query_engine(llm=llm).query(question).response)
+  return(index.as_query_engine(llm=llm).query(question).response, urls)

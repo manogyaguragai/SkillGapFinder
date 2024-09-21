@@ -8,13 +8,22 @@ from recommenderbot.flowchart import get_flowchart
 from searchbot import research_bot
 from ragbot import ragbot
 from utils import filters
-from helperfunctions import cv_upload_options
-
+from helperfunctions import cv_upload_options, info_card_module
 
 
 cols = st.columns(3)
 
-st.markdown("""<h1 style='text-align: center; color: black;'>SkillGapFinder</h1>""", unsafe_allow_html=True)
+st.markdown("""
+            <h1 style='text-align: center; color: black;'>SkillGapFinder</h1>
+            """, unsafe_allow_html=True)
+
+st.markdown("""
+            <h3 style='text-align: center; color: black;'> An AI-powered Web App for Finding Skill Gaps! </h3>
+            """, unsafe_allow_html=True)
+
+with st.container(border=True):
+    info_card_module()
+
 columns = st.columns([10,12])
 with st.container(border=1):
     syllabus_upload = st.file_uploader("Upload your syllabus", type="pdf")

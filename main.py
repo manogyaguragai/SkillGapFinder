@@ -6,10 +6,20 @@ from utils import get_gap
 from recommenderbot import project_recommender
 from recommenderbot.flowchart import get_flowchart
 from searchbot import research_bot
+from interestbot import search_for_jobs
 from ragbot import ragbot
 from utils import filters
-from helperfunctions import cv_upload_options, info_card_module
-
+from helperfunctions import  info_card_module
+st.markdown("""
+        <style>
+               .block-container {
+                    padding-top: 2rem;
+                    padding-bottom: 0rem;
+                    padding-left: 5rem;
+                    padding-right: 5rem;
+                }
+        </style>
+        """, unsafe_allow_html=True)
 
 cols = st.columns(3)
 
@@ -22,14 +32,14 @@ st.markdown("""
             """, unsafe_allow_html=True)
 
 with st.container(border=True):
-    info_card_module()
+    syllabus_upload, cv_info = info_card_module()
 
 columns = st.columns([10,12])
 with st.container(border=1):
-    syllabus_upload = st.file_uploader("Upload your syllabus", type="pdf")
+
+    
     
     # CV upload options
-    cv_info = cv_upload_options()
     
     # Additional filters or options
     data = filters()
@@ -70,7 +80,7 @@ with st.container(border=1):
                     response = get_gap(data_from_file=data_from_file, web_results=search_results, cv_file=cv_path)
                     
                     # Generate roadmap and project ideas
-                    roadmap_img, roadmap_url = get_flowchart(urls, data)
+                    roadmap_url = get_flowchart(urls, data)
                     
                     # Display course overview
                     with st.expander("**Course Overview**", expanded=True):

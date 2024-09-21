@@ -6,12 +6,12 @@ from llama_index.core import VectorStoreIndex
 from bs4 import BeautifulSoup
 
 
-def recommender(data_to_send):
+def project_recommender(data_to_send):
   
   job = data_to_send.get('job')
   industry = data_to_send.get('industry')
   
-  user_question = f'{job or industry} free resources and projects'  
+  user_question = f'{job or industry} project ideas github'  
   
   print(f'USER QUESTION: \n\n {user_question}')
   
@@ -72,12 +72,13 @@ def recommender(data_to_send):
       
   llm = OpenAI(model="gpt-4o-mini", temperature=0.00, system_prompt=
               """
-              You are an expert career specialist who can recommend free resources, projects and roadmaps according to given job information.
+              You are an expert career specialist who can recommend excellent projects according to given job information.
               Identify the job and industry provided in the given document.
-              Extract key information about availble resources to get mentioned skills and knowledge, possible projects that can be done to learn more, and roadmaps for further learning.
+              Extract key information about project ideas that can be implemented to get more skills on the identified job.
+              Also provide a detailed roadmap to learn the topics in proper order.
               """
               )
 
-  question = "Give me a detailed list of free resources and projects to help gain more skills on the identified job. Also provide a detailed roadmap to learn the topics"
+  question = "Give me a detailed list of projects to help gain more skills on the identified job. Also provide a detailed roadmap to learn the topics"
 
   return(index.as_query_engine(llm=llm).query(question).response, urls2)

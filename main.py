@@ -5,11 +5,12 @@ import tempfile
 from utils import get_gap
 from recommenderbot import project_recommender
 from recommenderbot.flowchart import get_flowchart
-from searchbot import research_bot
+from searchbot import web_search
 from interestbot import search_for_jobs
 from ragbot import ragbot
 from utils import filters
 from helperfunctions import  info_card_module
+
 st.markdown("""
         <style>
                .block-container {
@@ -71,7 +72,7 @@ with st.container(border=1):
                         data_from_file = ragbot(path=syllabus_path)
                     
                     # Perform web search
-                    search_results = research_bot(data)
+                    search_results = web_search(data)
                     
                     # Get project recommendations
                     resource, urls = project_recommender(data)

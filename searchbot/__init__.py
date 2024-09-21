@@ -1,87 +1,68 @@
-import openai
-from spider import Spider
+from llama_index.llms.openai import OpenAI
+from llama_index.tools.duckduckgo import DuckDuckGoSearchToolSpec
+from llama_index.readers.web import SimpleWebPageReader
+from llama_index.core.node_parser import SentenceSplitter
+from llama_index.core import VectorStoreIndex
 
-spider_client = Spider()
-openai_client = openai.Client()
-
-def research_bot(filter_data):
-    job = filter_data.get('job')
-    industry = filter_data.get('industry')
-    level = filter_data.get('level')
+def web_search(user_input): 
+    level = user_input.get('level')
+    job = user_input.get('job')
+    industry = user_input.get('industry')
+  
+    user_question = f'{level} {job or industry} jobs in Nepal'  
     
-    user_input = f'{level} {job or industry} job descriptions'  
-
-    user_query = refine_question(user_input)
+    tool_spec = DuckDuckGoSearchToolSpec()
     
-    result = research(user_query)
+    if user_input:
+        search_results = tool_spec.duckduckgo_full_search(query=user_question, max_results=5) 
+    else:
+        print("No valid user input provided.")
+        return "None"
+
+    print("Search Results Fetched")
+    print(search_results)
+
+    # Ensure search_results is a list of dictionaries
+    try:
+        urls = [item['href'] for item in search_results if isinstance(item, dict) and 'href' in item]
+    except Exception as e:
+        print(f"Error extracting URLs: {e}")
+        urls = []
+
+    print("URL LIST EXTRACTED")
+    print(urls)
+
+    if not urls:
+        print("No URLs found.")
+        return "No URLs found."
+
+    try:
+        documents = SimpleWebPageReader().load_data(urls)
+        print("DOCUMENTS FETCHED")
+        
+        valid_documents = [doc for doc in documents if doc.text is not None]
+        print("VALID DOCUMENTS FETCHED")
+
+    except Exception as e:
+        print(f"Error fetching data: {e}")
+        return None
+
+    node_parser = SentenceSplitter(chunk_size=1024, chunk_overlap=100)
     
-    return result
+    nodes = node_parser.get_nodes_from_documents(valid_documents, show_progress=True)
 
-    
-def search(query, limit=5):
-    """Perform a web search using Spider."""
-    params = {"limit": limit, "fetch_page_content": False}
-    print(f"Searching for: {query}")
-    results = spider_client.search(query, params)
-    print(f"Found {len(results)} results.")
-    print(results)
-    return results
+    index = VectorStoreIndex(nodes)
+        
+    llm = OpenAI(model="gpt-4o-mini", temperature=0.00, system_prompt=
+                  """
+                  You are an expert career specialist who can understand what job descriptions and requirements.
+                  Identify all the jobs and industries provided in the given document.
+                  Extract key information including the job description, technical and non-technical requirements, programming languages and tools, salary range, and other relevant information for top 3 jobs.
+                  Do not present any other information that is not mentioned in the given document.
+                  Present your outputs in a structured manner.
+                  """
+                  )
 
-def openai_request(system_content, user_content):
-    """Helper function to make OpenAI API requests."""
-    response = openai_client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": system_content},
-            {"role": "user", "content": user_content}
-        ]
-    )
-    return response.choices[0].message.content
+    question = "Give me a detailed list of requirements, salary range, job description and other key information for top 3 jobs from the given document."
 
-def form_search_query(user_query):
-    """Form a search query from the user's input."""
-    search_query = openai_request(
-        "You are an AI research assistant. Your task is to form an effective search query based on the user's question.",
-        f"User's question: {user_query}\n\nPlease provide a concise and effective search query to find relevant information from the web."
-    )
-    return search_query
-
-def form_final_answer(user_query, summary):
-    """Form a final answer based on the user's query and the summary."""
-    final_answer = openai_request(
-        """
-        You are an AI research assistant. Your task is to form a comprehensive answer to the user's question based on the provided summary.
-        """,
-        f"User's question: {user_query}\n\nSummary of research:\n{summary}\n\nPlease provide a comprehensive answer to the user's question based on this information."
-    )
-    print("Formed final answer.")
-    return final_answer
-
-def refine_question(original_question):
-    """Refine the search question based on the evaluation."""
-    print("Refining...")
-    return openai_request(
-        "You are an AI research assistant. Your task is to refine a search query based on the original question. Return only the refined string.",
-        f"Original question: {original_question}\n\n Please provide a refined search query to find more relevant information from the web."
-    )
-
-def research(user_query, max_iterations=5):
-    """Perform research on the given question."""
-    print(f"Starting research for: {user_query}")
-    
-    search_query = form_search_query(user_query)
-    print(f"Search query: {search_query}")
-    
-    search_results = search(search_query)
-    
-    print(f"Search results: {search_results}")
-    
-    combined_summary = "\n".join([result['description'] for result in search_results['content']])
-    
-    final_answer = form_final_answer(user_query, combined_summary)
-    
-    return f"Final Answer:\n{final_answer}"
-
-
-
-
+    return index.as_query_engine(llm=llm).query(question).response

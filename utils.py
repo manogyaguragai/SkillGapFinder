@@ -10,6 +10,9 @@ def get_gap( web_results,data_from_file):
 
 def filters():
     columns = st.columns(3)
+    if not columns[0].checkbox("I know what i want to be "):
+        st.write("Please select your job and level")
+
     jobs_by_industry = {
         "IT": ["Python Developer", "Backend Developer", "Frontend Developer", "Fullstack Developer", "Data Analyst", "UI/UX", "Q/A", "Product Manager"],
     }

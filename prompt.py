@@ -19,6 +19,7 @@ Inputs:
 
 {industry_standards}: A list of required skills, certifications, and competencies expected by the industry.
 
+{skills}: A list of skills, certifications, and competencies provided by the student.
 - Format: Details of current industry standards, qualifications, certifications, and required skills.
 
 """

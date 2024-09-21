@@ -3,3 +3,5 @@ llama-index-llms-openai
 streamlit
 llama-index-tools-duckduckgo
 llama-index-readers-web
+spider-client
+PyMuPDF

@@ -37,7 +37,7 @@ with st.container(border=1):
                     
                     resource, urls = project_recommender(data)
                     
-                    response = get_gap(data_from_file=data_from_file,web_results=resource)
+                    response = get_gap(data_from_file=data_from_file,web_results=search_results)
                     
                     
                     roadmap_img, roadmap_url = get_flowchart(urls,data)

@@ -10,7 +10,7 @@ def research_bot(filter_data):
     industry = filter_data.get('industry')
     level = filter_data.get('level')
     
-    user_input = f'{level} {job or industry} job descriptions in Nepal'  
+    user_input = f'{level} {job or industry} job descriptions'  
 
     user_query = refine_question(user_input)
     

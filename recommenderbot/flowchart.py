@@ -25,6 +25,8 @@ def get_flowchart(urls, data):
   job = data.get('job')
   industry = data.get('industry')
   
+  if job == "UI/UX":
+     job == "UX Design"
   user_question = f'{job or industry} roadmap from roadmap.sh'  
   
   print(f'Flowchart query: \n\n {user_question}')

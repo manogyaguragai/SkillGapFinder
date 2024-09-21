@@ -7,7 +7,7 @@ LLM = OpenAI(model="gpt-4", temperature=0.0)
 def ragbot(path):
   try:
     documents = loader.load(file_path=path)
-    print(f"{documents=}")
+    # print(f"{documents=}")
   except Exception as e:
     return f"Error loading document: {str(e)}"
     
@@ -21,7 +21,7 @@ def ragbot(path):
   """
 
   index = VectorStoreIndex.from_documents(documents,)
-  print(index)
+  # print(index)
   query_engine = index.as_query_engine(similarity_top_k=3, llm=LLM)
     
   response = query_engine.query(query)

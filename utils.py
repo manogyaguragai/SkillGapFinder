@@ -23,18 +23,7 @@ def filters():
         "Demographic Journalism": ["Data Journalist", "Demographic Analyst", "Investigative Reporter", "Research Journalist", "Fact-checker"]
     }
 
-    levels_by_industry = {
-        "IT": ["Intern", "Junior Developer", "Mid-Level Developer", "Senior Developer", "Tech Lead", "CTO"],
-        "Education": ["Assistant Teacher", "Teacher", "Senior Teacher", "Principal", "Dean"],
-        "HR": ["Intern", "HR Assistant", "HR Specialist", "HR Manager", "HR Director"],
-        "Finance": ["Junior Analyst", "Analyst", "Senior Analyst", "Finance Manager", "CFO"],
-        "Healthcare": ["Intern", "Resident", "Specialist", "Consultant", "Chief Medical Officer"],
-        "Marketing": ["Marketing Intern", "Marketing Executive", "Marketing Manager", "Marketing Director", "CMO"],
-        "Legal": ["Intern", "Junior Lawyer", "Associate Lawyer", "Senior Lawyer", "Partner"],
-        "Engineering": ["Intern", "Junior Engineer", "Engineer", "Senior Engineer", "Engineering Manager"],
-        "Journalism": ["Intern", "Junior Reporter", "Staff Writer", "Senior Reporter", "Editor-in-Chief"],
-        "Demographic Journalism": ["Intern", "Junior Data Journalist", "Research Analyst", "Senior Journalist", "Chief Data Journalist"]
-    }
+    levels_by_industry =["Intern","Entry Level", "Mid Level", "Senior Level"]
 
     selected_industry = columns[0].selectbox(
         label="Choose your industry",
@@ -43,13 +32,13 @@ def filters():
 
     selected_job = columns[1].selectbox(
         label="Choose your preferred job",
-        options=[None] + jobs_by_industry.get(selected_industry, []),
+        options=[None] + jobs_by_industry,
         index=0
     )
 
     selected_level = columns[2].selectbox(
         label="Choose your level preference",
-        options=[None] + levels_by_industry.get(selected_industry, []),
+        options=[None] + levels_by_industry,
         index=0
     )
 

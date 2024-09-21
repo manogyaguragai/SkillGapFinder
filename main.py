@@ -60,7 +60,7 @@ with st.container():
             
             resource, urls = project_recommender(data)
             syllabus_response = data_from_file_syllabus.response
-            response = get_gap(data_from_file=syllabus_response, web_results=search_results,cv_data=cv_resp)
+            response, percentage = get_gap(data_from_file=syllabus_response, web_results=search_results,cv_data=cv_resp)
             
             roadmap_url = get_flowchart(urls, data)
             
@@ -74,6 +74,13 @@ with st.container():
             
             with st.expander("**Identified Gap Between Your Curriculum and the Industry**", expanded=False):
                 st.write(response)
+                if percentage:
+                    st.write(percentage)
+                    my_bar = st.progress(percentage/100, text="You Readiness Level")
+                    my_bar.progress(percentage/100, text="You Readiness Level")
+
+
+                    
             
             with st.expander("**Roadmap and Project Ideas**"):
                 st.write(resource)

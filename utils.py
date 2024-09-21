@@ -14,7 +14,7 @@ def filters():
         "IT": ["Python Developer", "Backend Developer", "Frontend Developer", "Fullstack Developer", "Data Analyst", "UI/UX", "Q/A", "Product Manager"],
     }
 
-    levels_by_industry =["Intern","Entry Level", "Mid Level", "Senior Level"]
+    levels_by_industry =["Entry Level", "Mid Level", "Senior Level"]
 
     selected_industry = columns[0].selectbox(
         label="Choose your industry",

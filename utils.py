@@ -2,10 +2,32 @@
 from llama_index.llms.openai import OpenAI
 from prompt import PROMPT
 import streamlit as st
-llm = OpenAI(model="gpt-4o-mini",temperature=0.0)
+llm = OpenAI(model="gpt-4",temperature=0.0)
 
-def get_gap(web_results, data_from_file):
-    return llm.complete(PROMPT.format(curriculum=web_results, industry_standards=data_from_file)).text
+def get_gap( data_from_file):
+    web_results = """
+    ### Key Responsibilities:
+1. **Financial Record Keeping**: Accountants are responsible for maintaining accurate financial records for individuals, companies, or organizations. This includes managing ledgers, journals, and billing systems.
+  
+2. **Preparing Financial Statements**: They prepare essential financial documents such as balance sheets, profit and loss statements, and cash flow statements. 
+
+3. **Budgeting and Forecasting**: Accountants often assist in budget preparation and help with financial forecasting to identify future financial trends.
+
+4. **Tax Preparation and Compliance**: Ensuring compliance with local tax regulations, preparing tax returns, and identifying tax deductions are crucial parts of the job.
+
+5. **Auditing**: Some positions may require involvement in auditing processes, both internal and external, to verify financial accuracy.
+
+6. **Consultation and Financial Advice**: Accountants may also provide advice on financial management, investment strategies, and budgeting to clients or management.
+
+7. **Use of Accounting Software**: Proficiency in accounting software and tools is often required, as many firms rely on technology for financial operations.
+
+### Qualifications:
+1. **Educational Requirement**: A bachelor’s degree in accounting, finance, or a related field is typically required. 
+...
+In summary, accountant job descriptions in Nepal for 2023 reflect a comprehensive set of skills and responsibilities, with a strong emphasis on compliance, accuracy, and the ability to adapt to technological advancements in the field. Aspiring accountants should focus on gaining relevant qualifications and acquiring skills that align with these job requirements.
+
+    """
+    return llm.complete(PROMPT.format(curriculum=data_from_file, industry_standards=web_results)).text
 
 def filters():
     columns = st.columns(3)

@@ -1,5 +1,7 @@
 import streamlit as st
 import os
+from utils import get_gap
+
 st.set_page_config(page_title="SkillGapFinder", layout="wide",page_icon=os.path.join("assets","logo_transparent.png"))
 
 from ragbot import ragbot
@@ -86,6 +88,6 @@ with st.container(border=1):
 
 # By combining technical expertise with strong analytical and communication skills, mid-level data analysts in Nepal play a crucial role in helping organizations leverage data for strategic advantages. The evolving tech scene in Nepal offers ample opportunities for growth and professional development in this field.
 # """
-# response = get_gap(web_saerch, data_from_file)
+response = get_gap(data_from_file)
 
-# st.write(response)
+st.write(response)

@@ -57,7 +57,7 @@ def web_searcher(data_to_send):
 
   index = VectorStoreIndex(nodes)
       
-  llm = OpenAI(model="gpt-4o-mini", temperature=0.00, system_prompt=
+  llm = OpenAI(model="gpt-4", temperature=0.00, system_prompt=
               """
               You are a career counsellor responsible for providing career guidance to students and showing the gap between academics and the selected industry.
               You must use only the information from the provided document as your knowledge base.

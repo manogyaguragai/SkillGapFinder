@@ -75,6 +75,8 @@ def info_card_module():
     try:
     # Return user_interests only if it exists
         if user_interests:
+            for user_interest in user_interests: 
+                st.write(user_interest.replace("$", " "))
             return syllabus_upload, uploaded_file, user_interests
         else:
             return syllabus_upload, uploaded_file, None

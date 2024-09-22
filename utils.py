@@ -7,7 +7,7 @@ llm = OpenAI(model="gpt-4o-mini",temperature=0.0)
 
 def get_gap(web_results,data_from_file,cv_data):
     
-    response = llm.complete(PROMPT.format(curriculum=data_from_file, industry_standards=web_results, cv_file=cv_data)).text
+    response = llm.complete(PROMPT.format(curriculum=data_from_file, industry_standards=web_results, skills=cv_data)).text
 
     pattern = r"\d+(?=%)"  
     

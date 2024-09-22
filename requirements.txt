@@ -1,6 +1,8 @@
-pandas
-plotly
+llama-index
+llama-index-llms-openai
 streamlit
-yfinance
-pandas-datareader
-prophet
+llama-index-tools-duckduckgo
+llama-index-readers-web
+spider-client
+PyMuPDF
+streamlit-card

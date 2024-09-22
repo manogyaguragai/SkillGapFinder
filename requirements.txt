@@ -1,7 +1,6 @@
-llama-index
-llama-index-llms-openai
+pandas
+plotly
 streamlit
-llama-index-tools-duckduckgo
-llama-index-readers-web
-spider-client
-PyMuPDF
+yfinance
+pandas-datareader
+prophet

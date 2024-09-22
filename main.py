@@ -5,8 +5,7 @@ import tempfile
 from utils import get_gap
 from recommenderbot import project_recommender
 from recommenderbot.flowchart import get_flowchart
-from searchbot import research_bot
-from interestbot import search_for_jobs
+from searchbot import web_search
 from ragbot import ragbot
 from utils import filters
 from helperfunctions import  info_card_module
@@ -32,7 +31,7 @@ st.markdown("""
             """, unsafe_allow_html=True)
 
 with st.container(border=True):
-    syllabus_upload, cv_info = info_card_module()
+    syllabus_upload, cv_info,user_interests = info_card_module()
 
 columns = st.columns([10,12])
 with st.container(border=1):
@@ -71,11 +70,13 @@ with st.container(border=1):
                         data_from_file = ragbot(path=syllabus_path)
                     
                     # Perform web search
-                    search_results = research_bot(data)
+                    search_results = web_search(data)
                     
                     # Get project recommendations
                     resource, urls = project_recommender(data)
                     
+                    if user_interests:
+                        project_ideas = project_recommender(data_to_send={"industry":user_interests})
                     # Identify skill gaps based on the syllabus (and CV if available)
                     response, percentage = get_gap(data_from_file=data_from_file, web_results=search_results, cv_data=cv_path)
                     
@@ -101,6 +102,11 @@ with st.container(border=1):
                     # Display roadmap and project ideas
                     with st.expander("**Roadmap and Project Ideas**"):
                         st.write(resource)
+                        try:
+                            st.write("---")
+                            st.markdown(project_ideas)
+                        except:
+                            pass
                         st.markdown(f'[**View Detailed Roadmap here**]({roadmap_url})', unsafe_allow_html=True)
                         
                 except Exception as e:

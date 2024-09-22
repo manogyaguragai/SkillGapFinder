@@ -72,12 +72,11 @@ def info_card_module():
         # st.write(" ")
         if st.session_state.get("job_selected", False):
             user_interests = dialog()
-
-    if user_interests:
-        for i in user_interests: 
-
-            st.write(i.replace("$","USD"))    
     try:
-        return syllabus_upload,uploaded_file
+    # Return user_interests only if it exists
+        if user_interests:
+            return syllabus_upload, uploaded_file, user_interests
+        else:
+            return syllabus_upload, uploaded_file, None
     except:
-        return [syllabus_upload,None]
+        return [syllabus_upload, None,None]

@@ -64,7 +64,7 @@ def project_recommender(data_to_send):
       
   print(f'FETCHED URLS: \n\n {urls2}')
 
-  node_parser = SentenceSplitter(chunk_size=1024, chunk_overlap=100)
+  node_parser = SentenceSplitter()
     
   nodes = node_parser.get_nodes_from_documents(valid_documents, show_progress=True)
 
@@ -72,7 +72,7 @@ def project_recommender(data_to_send):
       
   llm = OpenAI(model="gpt-4o-mini", temperature=0.00, system_prompt=
               """
-              You are an expert career specialist who can recommend excellent projects according to given job information.
+              You are an expert career specialist who can recommend excellent projects according to given job information and a list of user interests.
               Identify the job and industry provided in the given document.
               Extract key information about project ideas that can be implemented to get more skills on the identified job.
               Also provide a detailed roadmap to learn the topics in proper order.

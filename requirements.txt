@@ -6,3 +6,5 @@ llama-index-readers-web
 spider-client
 PyMuPDF
 streamlit-card
+langchain
+langchain-openai

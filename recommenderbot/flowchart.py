@@ -18,7 +18,7 @@ def find_closest_match(urls, job, industry):
 
   
   
-def get_flowchart(urls, data):
+def get_flowchart( data):
   job = data.get('job')
   industry = data.get('industry')
   

@@ -22,10 +22,9 @@ def get_gap(web_results,data_from_file,cv_data):
 
 def dialog():
     with st.form("Interests"):
-        interests = st.multiselect(
+        interests = st.selectbox(
             label="What are your interests in the field of IT?",
             options=["Cybersecurity","Software Development","Data Science","Graphic Designing","Web Development","Artificial Intelligence","Machine Learning","Product Management","Product Design"],
-            help="Select all that apply",   
         )
 
         if st.form_submit_button("Submit"):

@@ -48,68 +48,67 @@ with st.container(border=1):
     
     # Handle form submission
     if bitton_col[-1].button("Submit"):
+        print(data)
         with st.spinner("**Processing**"):
             if syllabus_upload or cv_info:  # Ensure the app runs with either or both uploads
+                print(data)
                 syllabus_path, cv_path = None, None
-                
                 # Process syllabus upload
                 if syllabus_upload:
+                    print("hehh")
                     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                         temp_file.write(syllabus_upload.read())
                         syllabus_path = temp_file.name
-                
                 # Process CV upload if available
                 if cv_info:
                     with tempfile.NamedTemporaryFile(delete=False) as temp_file_cv:
                         temp_file_cv.write(cv_info.read())
                         cv_path = temp_file_cv.name
                 
-                try:
-                    # Extract data from the syllabus using the RAG bot
-                    if syllabus_path:
-                        data_from_file = ragbot(path=syllabus_path)
-                    
-                    # Perform web search
-                    search_results = web_search(data)
-                    
-                    # Get project recommendations
-                    resource, urls = project_recommender(data)
-                    
-                    if user_interests:
-                        project_ideas = project_recommender(data_to_send={"industry":user_interests})
-                    # Identify skill gaps based on the syllabus (and CV if available)
-                    response, percentage = get_gap(data_from_file=data_from_file, web_results=search_results, cv_data=cv_path)
-                    
-                    # Generate roadmap and project ideas
-                    roadmap_url = get_flowchart(urls, data)
-                    
-                    # Display course overview
-                    with st.expander("**Course Overview**", expanded=True):
-                        st.write(data_from_file.response)
-                    
-                    # Display web search results
-                    with st.expander("**Web Search Results**", expanded=False):
-                        st.write(search_results)
-                    
-                    # Display identified skill gap
-                    with st.expander("**Identified Gap Between Your Curriculum and the Industry**", expanded=False):
-                        st.write(response)
-                        if percentage:
-                            st.write(percentage)
-                            my_bar = st.progress(percentage/100, text="You Readiness Level")
-                            my_bar.progress(percentage/100, text="You Readiness Level")
+                print("HERE")
+                data_from_file = ragbot(path=syllabus_path)
+                
+                # Perform web search
+                search_results = web_search(data)
+                
+                # Get project recommendations
+                resource = project_recommender(data)
+                
+                if user_interests:
+                    project_ideas = project_recommender(data_to_send={"industry":user_interests})
+                # Identify skill gaps based on the syllabus (and CV if available)
+                response, percentage = get_gap(data_from_file=data_from_file, web_results=search_results, cv_data=cv_path)
+                
+                # Generate roadmap and project ideas
+                roadmap_url = get_flowchart( data)
+                
+                # Display course overview
+                with st.expander("**Course Overview**", expanded=True):
+                    st.write(data_from_file.response)
+                
+                # Display web search results
+                with st.expander("**Web Search Results**", expanded=False):
+                    st.write(search_results)
+                
+                # Display identified skill gap
+                with st.expander("**Identified Gap Between Your Curriculum and the Industry**", expanded=False):
+                    st.write(response)
+                    if percentage:
+                        # st.write(percentage)
+                        my_bar = st.progress(percentage/100, text="You Readiness Level")
+                        my_bar.progress(percentage/100, text="You Readiness Level")
 
-                    # Display roadmap and project ideas
-                    with st.expander("**Roadmap and Project Ideas**"):
-                        st.write(resource)
-                        try:
-                            st.write("---")
-                            st.markdown(project_ideas)
-                        except:
-                            pass
-                        st.markdown(f'[**View Detailed Roadmap here**]({roadmap_url})', unsafe_allow_html=True)
+                # Display roadmap and project ideas
+                with st.expander("**Roadmap and Project Ideas**"):
+                    st.write(resource)
+                    # try:
+                    st.write("---")
+                    st.markdown(resource)
+                    # except:
+                    #     pass
+                    st.markdown(f'[**View Detailed Roadmap here**]({roadmap_url})', unsafe_allow_html=True)
                         
-                except Exception as e:
-                    st.error(f"An error occurred: {e}")
+                # except Exception as e:
+                #     st.error(f"An error occurred: {e}")
             else:
                 st.info("Please upload your syllabus or CV")

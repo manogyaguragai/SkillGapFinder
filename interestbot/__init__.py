@@ -1,29 +1,24 @@
-from llama_index.tools.duckduckgo import DuckDuckGoSearchToolSpec
-from llama_index.readers.web import SimpleWebPageReader 
-from llama_index.core.node_parser import SentenceSplitter
-from llama_index.core import VectorStoreIndex
-from llama_index.llms.openai import OpenAI
+from langchain.tools import DuckDuckGoSearchRun
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_openai import ChatOpenAI
+def search_for_jobs(area_of_interest):
 
+    prompt = """
+    Given a Jumbled list of jobs in a unstructured format.
+    Your task is to process the input into meaningful well formatted jobs. Include the job title, description, and requirements.
+    {input}
 
-def search_for_jobs(areas_of_interest):
-    tool_spec = DuckDuckGoSearchToolSpec()
-    summaries =[]
-    for interest in areas_of_interest:
-        user_question= f"Jobs that involve {interest}"
+    """
+    prompot__ = PromptTemplate.from_template(prompt)  
+    
+    search = DuckDuckGoSearchRun()#Search Tool
 
-        search_results = tool_spec.duckduckgo_full_search(query=user_question, max_results=2) 
-        links = [item['href'] for item in search_results]
+    llm = ChatOpenAI(temperature=0.0,model="gpt-4o-mini")
 
-        docs = SimpleWebPageReader().load_data(links)
+    chain = prompot__|llm|StrOutputParser()
 
-        valid_documents = [doc for doc in docs if doc.text]
+        
 
-        node_parser = SentenceSplitter()
-        nodes = node_parser.get_nodes_from_documents(valid_documents)
-
-        index = VectorStoreIndex(nodes)
-
-        question = "Give me a summary of the given document."
-        summaries.append( index.as_query_engine(llm=OpenAI(model="gpt-4o-mini",temperature=0.0)).query(question).response)
-    print(summaries)
-    return summaries
+    return chain.invoke(input={"input":search.run(area_of_interest)}).replace("`","")
+        

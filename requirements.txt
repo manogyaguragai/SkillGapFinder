@@ -8,3 +8,4 @@ PyMuPDF
 streamlit-card
 langchain
 langchain-openai
+langchain-community
